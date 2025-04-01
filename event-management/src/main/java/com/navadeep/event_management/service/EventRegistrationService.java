@@ -33,6 +33,10 @@ public class EventRegistrationService {
     }
 
     public EventRegistrationDTO registerUserForEvent(Long userId, Long eventId) {
+        if(userId == null || eventId == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Invalid user id :"+userId+" or event id "+eventId);
+        }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found!"));
         Event event = eventRepository.findById(eventId)
@@ -56,6 +60,10 @@ public class EventRegistrationService {
     }
 
     public List<EventRegistrationDTO> getUserRegistrations(Long userId) {
+        if(userId == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Invalid user Id ");
+        }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found!"));
 

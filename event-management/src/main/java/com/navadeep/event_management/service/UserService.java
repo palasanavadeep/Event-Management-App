@@ -3,6 +3,7 @@ package com.navadeep.event_management.service;
 import com.navadeep.event_management.dto.UserDTO;
 import com.navadeep.event_management.mapper.DTOMapper;
 import com.navadeep.event_management.repository.UserRepository;
+import com.navadeep.event_management.utility.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -25,6 +26,17 @@ public class UserService {
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    public String login(String email, String password) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isEmpty() || !passwordEncoder.matches(password, userOptional.get().getPassword())) {
+            throw new RuntimeException("Invalid credentials");
+        }
+        return jwtUtil.generateToken(email);
     }
 
     // Register User and return DTO

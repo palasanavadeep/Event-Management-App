@@ -26,4 +26,5 @@ public class EventRegistrationController {
     public ResponseEntity<List<EventRegistrationDTO>> getUserRegistrations(@PathVariable Long userId) {
         return ResponseEntity.ok(eventRegistrationService.getUserRegistrations(userId));
     }
+
 }

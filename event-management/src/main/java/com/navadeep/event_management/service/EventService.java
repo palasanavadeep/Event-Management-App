@@ -46,7 +46,7 @@ public class EventService {
         return DTOMapper.convertToEventDTO(savedEvent);
     }
 
-    
+
 
     public List<EventDTO> getAllEvents() {
         List<Event> events = eventRepository.findAll();
