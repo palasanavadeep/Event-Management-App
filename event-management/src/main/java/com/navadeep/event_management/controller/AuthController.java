@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -17,11 +19,18 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody Map<String, String> credentials) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> credentials) {
         String email = credentials.get("email");
         String password = credentials.get("password");
         String token = userService.login(email, password);
-        return Map.of("token", token);
+        Map<String, String> response = new HashMap<>();
+        UserDTO user = userService.getUserByEmail(email);
+        response.put("token", token);
+        response.put("email", email);
+        response.put("username", user.getName());
+        response.put("role" ,user.getRole());
+        response.put("id" , user.getId().toString() );
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")

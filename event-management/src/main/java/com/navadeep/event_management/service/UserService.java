@@ -73,7 +73,19 @@ public class UserService {
         User user = userRepository
                 .findById(userId)
                 .orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found"));
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found"));
+        return convertToUserDTO(user);
+
+    }
+    public UserDTO getUserByEmail(String email) {
+        if(email == null  || email.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Invalid is Required !");
+        }
+        User user = userRepository
+                .findByEmail(email.trim())
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found"));
         return convertToUserDTO(user);
 
     }

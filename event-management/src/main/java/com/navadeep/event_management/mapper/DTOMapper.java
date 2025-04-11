@@ -15,7 +15,7 @@ public class DTOMapper {
         EventRegistrationDTO dto = new EventRegistrationDTO();
         dto.setId(registration.getId());
         dto.setUserName(registration.getUser().getName()); // Extracting username
-        dto.setEventName(registration.getEvent().getName()); // Extracting event name
+        dto.setEvent(convertToEventDTO(registration.getEvent())); // Extracting event name
         dto.setRegistrationDate(registration.getRegistrationDate());
         dto.setAttended(registration.isAttended());
         return dto;
@@ -91,6 +91,7 @@ public static UserDTO convertToUserDTO(User user) {
                 .venue(event.getVenue())
                 .category(String.valueOf(event.getCategory()))
                 .createdBy(String.valueOf(event.getCreatedBy().getId())) // Assuming 'createdBy' is a User entity
+                .image(event.getImageUrl())
                 .build();
     }
 

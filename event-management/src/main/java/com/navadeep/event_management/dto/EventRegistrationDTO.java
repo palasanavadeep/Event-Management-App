@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class EventRegistrationDTO {
     private Long id;
     private String userName; // Send only username instead of full object
-    private String eventName; // Send only event name instead of full object
+    private EventDTO event; // Send only event name instead of full object
     private LocalDateTime registrationDate;
     private boolean attended;
 }

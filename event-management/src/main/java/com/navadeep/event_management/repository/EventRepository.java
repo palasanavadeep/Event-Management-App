@@ -12,4 +12,5 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     List<Event> findByCategory(EventCategory category); // Find events by category
     List<Event> findByCreatedBy(User createdBy); // Find events created by a specific user
+
 }

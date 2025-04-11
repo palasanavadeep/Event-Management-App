@@ -20,5 +20,6 @@ public class EventDTO {
     private String venue;
     private String category;
     private String createdBy; // Send only the admin's name
+    private String image;
 
 }
