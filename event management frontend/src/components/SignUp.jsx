@@ -141,10 +141,10 @@ const SignUp = () => {
                     </Button>
                 </form>
 
-                <Button fullWidth variant="outlined" startIcon={<GoogleIcon />} 
+                {/* <Button fullWidth variant="outlined" startIcon={<GoogleIcon />} 
                     sx={{ mt: 2, color: "#706D54", borderColor: "#A08963", ":hover": { bgcolor: "#C9B194" } }}>
                     Sign up with Google
-                </Button>
+                </Button> */}
 
                 <Typography variant="body2" mt={2}>
                     Already have an account?{" "}

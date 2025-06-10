@@ -86,14 +86,14 @@ const SignIn = () => {
                     </Button>
                 </form>
 
-                <Button
+                {/* <Button
                     fullWidth
                     variant="outlined"
                     startIcon={<GoogleIcon />}
                     sx={{ mt: 2, color: "#706D54", borderColor: "#A08963", ":hover": { bgcolor: "#C9B194" } }}
                 >
                     Sign in with Google
-                </Button>
+                </Button> */}
 
                 <Typography variant="body2" mt={2}>
                     Don't have an account?{" "}
