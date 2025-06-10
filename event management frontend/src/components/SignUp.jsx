@@ -127,13 +127,13 @@ const SignUp = () => {
                             </InputAdornment>
                         )}} />
 
-                    <FormControl component="fieldset" sx={{ mt: 2 }}>
+                    {/* <FormControl component="fieldset" sx={{ mt: 2 }}>
                         <FormLabel component="legend">Select Role</FormLabel>
                         <RadioGroup row value={role} onChange={(e) => setRole(e.target.value)}>
                             <FormControlLabel value="ADMIN" control={<Radio />} label="ADMIN" />
                             <FormControlLabel value="USER" control={<Radio />} label="USER" />
                         </RadioGroup>
-                    </FormControl>
+                    </FormControl> */}
 
                     <Button type="submit" fullWidth variant="contained" 
                         sx={{ bgcolor: "#706D54", color: "white", mt: 2, ":hover": { bgcolor: "#A08963" } }}>
