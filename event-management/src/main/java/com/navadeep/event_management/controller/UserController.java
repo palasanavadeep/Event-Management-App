@@ -33,4 +33,12 @@ public class UserController {
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
+
+
+    @PostMapping("/request-admin")
+    public ResponseEntity<String> requestAdminUpgrade(@RequestParam Long userId) {
+        String message = userService.handleAdminUpgradeRequest(userId);
+        return ResponseEntity.ok(message);
+    }
+
 }

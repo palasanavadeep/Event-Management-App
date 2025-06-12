@@ -44,6 +44,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/login", "/api/auth/register").permitAll() // Allow public routes
                         .requestMatchers("/h2-console/**").permitAll() // Allow H2 Console
+                        .requestMatchers("/api/super-admin/**").hasRole("SUPER_ADMIN")
                         .anyRequest().authenticated() // Secure other routes
                 )
                 .exceptionHandling(ex -> ex

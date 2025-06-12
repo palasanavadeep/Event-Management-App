@@ -2,6 +2,8 @@ package com.navadeep.event_management.service;
 
 import com.navadeep.event_management.dto.UserDTO;
 import com.navadeep.event_management.mapper.DTOMapper;
+import com.navadeep.event_management.model.AdminUpgradeRequest;
+import com.navadeep.event_management.repository.AdminUpgradeRequestRepository;
 import com.navadeep.event_management.repository.UserRepository;
 import com.navadeep.event_management.utility.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import com.navadeep.event_management.model.UserRole;
 import com.navadeep.event_management.model.User;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -22,10 +26,14 @@ import static com.navadeep.event_management.mapper.DTOMapper.convertToUserDTO;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private  final AdminUpgradeRequestRepository adminUpgradeRequestRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder,
+                       AdminUpgradeRequestRepository adminUpgradeRequestRepository, AdminUpgradeRequestRepository adminUpgradeRequestRepository1) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.adminUpgradeRequestRepository = adminUpgradeRequestRepository1;
     }
 
     @Autowired
@@ -98,6 +106,30 @@ public class UserService {
     }
 
 
+    public String handleAdminUpgradeRequest(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
+        if (user.getRole() != UserRole.USER) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only USERs can request admin upgrade.");
+        }
 
+        boolean alreadyRequested = adminUpgradeRequestRepository
+                .findByStatus(AdminUpgradeRequest.RequestStatus.PENDING).stream()
+                .anyMatch(r -> r.getUser().getId().equals(userId));
+
+        if (alreadyRequested) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Upgrade request is already pending.");
+        }
+
+        AdminUpgradeRequest request = AdminUpgradeRequest.builder()
+                .user(user)
+                .requestDate(LocalDateTime.now())
+                .status(AdminUpgradeRequest.RequestStatus.PENDING)
+                .build();
+
+        adminUpgradeRequestRepository.save(request);
+
+        return "Admin upgrade request submitted.";
+    }
 }
