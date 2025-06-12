@@ -35,9 +35,12 @@ public class UserController {
     }
 
 
-    @PostMapping("/request-admin")
-    public ResponseEntity<String> requestAdminUpgrade(@RequestParam Long userId) {
+    @PostMapping("/request-admin/{userId}")
+    public ResponseEntity<String> requestAdminUpgrade(@PathVariable Long userId) {
+//        System.out.println(userId);
+//        System.out.println("test");
         String message = userService.handleAdminUpgradeRequest(userId);
+        System.out.println("finish");
         return ResponseEntity.ok(message);
     }
 

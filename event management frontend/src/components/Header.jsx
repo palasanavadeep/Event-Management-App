@@ -31,8 +31,14 @@ const Header = () => {
                     <nav className="hidden md:flex space-x-4">
                         <NavLink to="/" className={navLinkClasses}>Home</NavLink>
                         <NavLink to="/events" className={navLinkClasses}>Events</NavLink>
+                        {auth.role === "USER" && (
+                            <NavLink to="/admin-access" className={navLinkClasses}>Become an Admin</NavLink>
+                        )}
                         {auth.role === "ADMIN" && (
                             <NavLink to="/event/create" className={navLinkClasses}>Create Event</NavLink>
+                        )}
+                        {auth.role === "SUPER_ADMIN" && (
+                            <NavLink to="/upgrade-requests" className={navLinkClasses}>Upgrade Requests</NavLink>
                         )}
                         <NavLink to="/about" className={navLinkClasses}>About</NavLink>
                         <NavLink to="/contact" className={navLinkClasses}>Contact</NavLink>

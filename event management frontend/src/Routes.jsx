@@ -14,6 +14,8 @@ import Contact from "./components/Contact.jsx";
 import Profile from "./pages/Profile.jsx";
 import EditProfile from "./pages/EditProfile.jsx";
 import Protected from "./Protected.jsx";
+import UpgradeRequestsPage from "./pages/UpgradeRequestsPage.jsx";
+import AdminAccessPage from "./pages/AdminAccessPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +35,9 @@ const router = createBrowserRouter([
       { path: "edit-profile", element: <Protected>  <EditProfile />  </Protected> },
       { path: "about", element: <About /> },
       { path: "contact", element: <Contact /> },
+      { path: "upgrade-requests", element: <UpgradeRequestsPage /> },
+      { path: "admin-access", element: <AdminAccessPage />},
+      
     ],
   },
 ]);

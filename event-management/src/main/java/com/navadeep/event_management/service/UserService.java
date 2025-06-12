@@ -6,6 +6,8 @@ import com.navadeep.event_management.model.AdminUpgradeRequest;
 import com.navadeep.event_management.repository.AdminUpgradeRequestRepository;
 import com.navadeep.event_management.repository.UserRepository;
 import com.navadeep.event_management.utility.JwtUtil;
+import jakarta.transaction.Transactional;
+import jdk.swing.interop.SwingInterOpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -49,7 +51,7 @@ public class UserService {
 
     // Register User and return DTO
     public UserDTO registerUser(User user) {
-
+        System.out.println("test");
         if(user.getEmail() == null || user.getEmail().isEmpty() ||
             user.getPassword() == null || user.getPassword().isEmpty()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -68,6 +70,7 @@ public class UserService {
 
         // Encode password before saving
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(UserRole.USER);
         User savedUser = userRepository.save(user);
 //        System.out.println("Saved user: " + savedUser);
         return DTOMapper.convertToUserDTO(savedUser);
@@ -105,7 +108,6 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-
     public String handleAdminUpgradeRequest(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
@@ -113,6 +115,8 @@ public class UserService {
         if (user.getRole() != UserRole.USER) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only USERs can request admin upgrade.");
         }
+
+        System.out.println("test");
 
         boolean alreadyRequested = adminUpgradeRequestRepository
                 .findByStatus(AdminUpgradeRequest.RequestStatus.PENDING).stream()
@@ -122,11 +126,10 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Upgrade request is already pending.");
         }
 
-        AdminUpgradeRequest request = AdminUpgradeRequest.builder()
-                .user(user)
-                .requestDate(LocalDateTime.now())
-                .status(AdminUpgradeRequest.RequestStatus.PENDING)
-                .build();
+        AdminUpgradeRequest request = new  AdminUpgradeRequest();
+        request.setUser(user);
+        request.setRequestDate(LocalDateTime.now());
+        request.setStatus(AdminUpgradeRequest.RequestStatus.PENDING);
 
         adminUpgradeRequestRepository.save(request);
 
