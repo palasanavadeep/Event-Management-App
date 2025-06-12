@@ -8,3 +8,5 @@ export function convertToDate(dateTimeStr) {
 export function convertToTime(dateTimeStr) {
     return dateTimeStr.split("T")[1].split(":").slice(0, 2).join(":");
 }
+// Added a comment in feature/passwordStrength
+// Added a comment below

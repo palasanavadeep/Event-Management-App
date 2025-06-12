@@ -15,6 +15,7 @@ const SignUp = () => {
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
+    const [passwordStrength, setPasswordStrength] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [role, setRole] = useState("USER");
     const [showPassword, setShowPassword] = useState(false);
@@ -43,10 +44,13 @@ const SignUp = () => {
             valid = false;
         }
 
-        if (password.length < 6) {
-            newErrors.password = "Password must be at least 6 characters long";
-            valid = false;
-        }
+         const strengthRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+        if (!strengthRegex.test(password)) {
+             newErrors.password = "Password must be 8+ chars, include 1 uppercase, 1 number, 1 special char";
+             valid = false;
+                }
+
 
         if (password !== confirmPassword) {
             newErrors.confirmPassword = "Passwords do not match";
@@ -56,6 +60,21 @@ const SignUp = () => {
         setErrors(newErrors);
         return valid;
     };
+    const checkPasswordStrength = (pwd) => {
+    let strength = "";
+    const strongRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+    if (!pwd) {
+        strength = "";
+    } else if (strongRegex.test(pwd)) {
+        strength = "Strong";
+    } else {
+        strength = "Weak";
+    }
+
+    setPasswordStrength(strength);
+};
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -69,13 +88,15 @@ const SignUp = () => {
         }
 
         try {
-            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, 
-            {   name,
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, {
+              name,
                 email,
-                phone,
-                password,
-                role
-            });
+               phone,
+               password,
+                   role
+              });
+
+          
 
             if (response.status === 200) {
                 setSnackbar({ open: true, message: "Signup successful!", severity: "success" });
@@ -105,16 +126,42 @@ const SignUp = () => {
                     <TextField fullWidth label="Phone Number" variant="outlined" margin="normal" value={phone}
                         onChange={(e) => setPhone(e.target.value)} required error={!!errors.phone} helperText={errors.phone} />
 
-                    <TextField fullWidth label="Password" type={showPassword ? "text" : "password"} variant="outlined"
-                        margin="normal" value={password} onChange={(e) => setPassword(e.target.value)} required 
-                        error={!!errors.password} helperText={errors.password}
-                        InputProps={{ endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                                </IconButton>
-                            </InputAdornment>
-                        )}} />
+                    <TextField
+  fullWidth
+  label="Password"
+  type={showPassword ? "text" : "password"}
+  variant="outlined"
+  margin="normal"
+  value={password}
+  onChange={(e) => {
+    setPassword(e.target.value);
+    checkPasswordStrength(e.target.value);
+  }}
+  required
+  error={!!errors.password}
+  helperText={errors.password}
+  InputProps={{
+    endAdornment: (
+      <InputAdornment position="end">
+        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+          {showPassword ? <VisibilityOff /> : <Visibility />}
+        </IconButton>
+      </InputAdornment>
+    ),
+  }}
+/>
+
+{password && (
+  <Typography
+    variant="body2"
+    color={passwordStrength === "Strong" ? "green" : "red"}
+    sx={{ textAlign: "left", mt: 1 }}
+  >
+    Password Strength: {passwordStrength}
+  </Typography>
+)}
+
+
 
                     <TextField fullWidth label="Confirm Password" type={showConfirmPassword ? "text" : "password"}
                         variant="outlined" margin="normal" value={confirmPassword}
@@ -141,10 +188,10 @@ const SignUp = () => {
                     </Button>
                 </form>
 
-                {/* <Button fullWidth variant="outlined" startIcon={<GoogleIcon />} 
+                <Button fullWidth variant="outlined" startIcon={<GoogleIcon />} 
                     sx={{ mt: 2, color: "#706D54", borderColor: "#A08963", ":hover": { bgcolor: "#C9B194" } }}>
                     Sign up with Google
-                </Button> */}
+                </Button>
 
                 <Typography variant="body2" mt={2}>
                     Already have an account?{" "}
